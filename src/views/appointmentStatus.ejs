@@ -1,0 +1,23 @@
+<%- include('partials/header'); -%>
+<div id="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-sm-12">
+
+            <!-- Errors -->
+            <% if (error) { %>
+                <h5 class="alert alert-danger lead font-italic shadow-sm">Invalid data.</h5>
+            <% } %>
+
+            <!-- New Appointment Added -->
+            <% if (success) { %>
+                <h5 class="alert alert-success lead font-italic shadow-sm"><i class='bx bx-check-circle'></i> New Appointment Added!</h5>
+            <% } %>
+
+        </div>
+
+    </div>
+</div>
+
+
+<%- include('partials/footer'); -%>

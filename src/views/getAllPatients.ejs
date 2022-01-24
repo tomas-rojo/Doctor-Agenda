@@ -1,0 +1,47 @@
+<%- include('partials/header'); -%>
+<div id="content">
+    <div class="container">
+
+        <% if (patients.length> 0) { %>
+
+                <table id="patientsList" class="table table-light table-striped table-bordered table-hover text-center table-responsive-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Properties</th>
+                        </tr>
+                    </thead>
+                    <% patients.map(function(patient) { %>
+                        <tr>
+                            <td class="text-capitalize">
+                                <%= patient.name %>
+                            </td>
+                            <td>
+                                <%= patient.email %>
+                            </td>
+                            <td>
+                                <%= patient.phone_number %>
+                            </td>
+    
+                            <td class="d-flex justify-content-around">
+                                <a href="/add-appointment/<%= patient.id %>" class="btn btn-primary mx-1">Add Appointment</a>
+                                <a href="#" class="btn btn-outline-success mx-1" title="Edit Patient"><i class='bx bx-edit-alt'></i></a>
+                                <a href="/delete-patient/<%= patient.id %>" class="btn btn-outline-danger mx-1" title="Delete Patient"><i class='bx bx-trash'></i></a>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </table>
+
+            
+            <% } else { %>
+                <h5 class="alert alert-warning lead font-italic">No patients found.</h5>
+            <% } %>
+
+            <%- include('partials/modal'); -%>
+
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>

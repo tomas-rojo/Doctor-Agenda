@@ -1,0 +1,66 @@
+  </div>
+
+</div>
+
+  
+  <!-- Optional JS -->
+
+  <script>
+    $(function() {
+    $('input[name="datetime"]').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerIncrement: 30,
+        minYear: parseInt(moment().format('YYYY'),10), //Show only the current year for Min Year
+        maxYear: parseInt(moment().format('YYYY'),10) + 1,
+        startDate: moment().startOf('day').add(8, 'hours'),
+        opens:'left',
+        drops: 'up',
+        locale: { format: 'MM-DD-YYYY HH:mm A' },
+        // Block Weekend Days
+        isInvalidDate: function(date) {
+          return (date.day() == 0 || date.day() == 6) ? true : false
+        }
+      }).on('show.daterangepicker', function(ev, picker) {
+            var $hours = picker.container.find('.hourselect').children();
+            $hours.filter(':gt(17)').remove();    
+            $hours.filter(':lt(8)').remove();
+   });
+     
+    });
+    </script>
+  
+
+  <script>
+    $(document).ready( function () {
+        $('#patientsList').DataTable({
+          pageLength:5,
+          lengthMenu: [[5, 10, 20], [5,10,20]],
+          render: $.fn.dataTable.render.text()
+        });
+    } );
+
+    $(document).ready( function () {
+       $('#appointmentsList').DataTable({
+          render: $.fn.dataTable.render.text(),
+          order: ( [3, 'asc' ] ) // Order Appointment Table by Date by default
+        });
+    } );
+
+    $("#appointmentsList").on("click", ".delete-btn", function() {
+     $(this).closest("tr").remove();
+    });   
+
+  </script>
+
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="/script.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/b-2.1.1/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+</body>
+</html>

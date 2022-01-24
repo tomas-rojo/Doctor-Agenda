@@ -1,0 +1,49 @@
+<%- include('partials/header'); -%>
+<div id="content">
+    <div class="container">
+
+        <% if (appointments.length> 0) { %>
+
+                <table id="appointmentsList" class="table table-light table-striped table-bordered table-hover text-center table-responsive-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Date</th>
+                            <th>Properties</th>
+                        </tr>
+                    </thead>
+                    <% appointments.map(function(appointment) { %>
+                        <tr>
+                            <td>
+                                <%= appointment.name %>
+                            </td>
+                            <td>
+                                <%= appointment.email %>
+                            </td>
+                            <td>
+                                <%= appointment.phone_number %>
+                            </td>
+                            <td>
+                                <%= appointment.date %>
+                            </td>
+    
+                            <td class="d-flex justify-content-around">
+                                <a href="/delete-appointment/<%= appointment.email %>" class="btn btn-outline-danger mx-1" title="Delete Appointment"><i class='bx bx-trash'></i></a>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </table>
+
+            
+            <% } else { %>
+                <h5 class="alert alert-warning lead font-italic">No appointments found.</h5>
+            <% } %>
+
+            <%- include('partials/modal'); -%>
+
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>
