@@ -42,12 +42,12 @@ exports.getAllPatients = async (req, res, next) => {
         // Fetching Data from DB
         const response = await Patient.getAllPatientsFromDB()
 
-        // Saving the results in Redis. The "EX" and 1800, sets an expiration of 1800 Seconds = 30 minutes
+        // Saving the results in Redis. The "EX" and 60, sets an expiration of one minute
         await SET_ASYNC(
             "patients",
             JSON.stringify(response.rows),
             "EX",
-            1800
+            60
         );
 
         // Respond to Client
@@ -99,17 +99,17 @@ exports.getAllAppointments = async (req, res, next) => {
         const reply = await GET_ASYNC("appointments");
 
         // If exists returns from redis and finish with response
-        if (reply) return res.render('getAllPatients', { patients: JSON.parse(reply) });
+        if (reply) return res.render('getAllAppointments', { appointments: JSON.parse(reply) });
 
          // Fetching Data from DB
         const appointments = await Appointment.getAllAppointmentsFromDB()
 
-        // Saving the results in Redis. The "EX" and 1800, sets an expiration of 1800 Seconds = 30 minutes
+        // Saving the results in Redis. The "EX" and 60, sets an expiration of one minute
         await SET_ASYNC(
             "appointments",
             JSON.stringify(appointments.rows),
             "EX",
-            1800
+            60
         );
 
         // Respond to Client
