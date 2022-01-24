@@ -1,18 +1,19 @@
 const Patient = require('../models/Patient')
 const Appointment = require('../models/Appointment')
 const { validateAppointmentInfo } = require('../services/validations')
-
+const {REDIS_URL, REDIS_PORT, REDIS_PASSWORD} = require('../config/globals')
 const redis = require("redis");
-// const responseTime = require("response-time");
 const { promisify } = require("util");
 
 // Connecting to redis
 const client = redis.createClient({
-  host: "127.0.0.1",
-  port: 6379,
-});
+    host : REDIS_URL, 
+    port: REDIS_PORT,
+    no_ready_check: true,
+    auth_pass: `${REDIS_PASSWORD}`                                                                                                                                                           
+}); 
 
-// Promisifying Get and set methods
+// Promisifying Get and Set Methods
 const GET_ASYNC = promisify(client.get).bind(client);
 const SET_ASYNC = promisify(client.set).bind(client);
 
@@ -36,14 +37,12 @@ exports.getAllPatients = async (req, res, next) => {
         const reply = await GET_ASYNC("patients");
 
         // If exists returns from redis and finish with response
-        // if (reply) return res.send(JSON.parse(reply));
         if (reply) return res.render('getAllPatients', { patients: JSON.parse(reply) });
         
-
         // Fetching Data from DB
         const response = await Patient.getAllPatientsFromDB()
 
-        // Saving the results in Redis. The "EX" and 1880, sets an expiration of 1800 Seconds = 30 minutes
+        // Saving the results in Redis. The "EX" and 1800, sets an expiration of 1800 Seconds = 30 minutes
         await SET_ASYNC(
             "patients",
             JSON.stringify(response.rows),
@@ -74,7 +73,7 @@ exports.getAppointment = async (req, res, next) => {
         const patient = await Patient.findPatientFromDB(req.params.id)
         res.render('addNewAppointment', { error: false , success: false, patient: patient.rows[0] });
     } catch (error) {
-        res.send(error)
+        res.status(404).render('404')
     }
 };
 
@@ -96,10 +95,28 @@ exports.addAppointment = async (req, res, next) => {
 
 exports.getAllAppointments = async (req, res, next) => {
     try {
+        // Search Data in Redis
+        const reply = await GET_ASYNC("appointments");
+
+        // If exists returns from redis and finish with response
+        if (reply) return res.render('getAllPatients', { patients: JSON.parse(reply) });
+
+         // Fetching Data from DB
         const appointments = await Appointment.getAllAppointmentsFromDB()
+
+        // Saving the results in Redis. The "EX" and 1800, sets an expiration of 1800 Seconds = 30 minutes
+        await SET_ASYNC(
+            "appointments",
+            JSON.stringify(appointments.rows),
+            "EX",
+            1800
+        );
+
+        // Respond to Client
         res.render('getAllAppointments', {appointments: appointments.rows})
+
     } catch (error) {
-        res.json(error)
+        res.status(404).render('404')
     }
 };
 
@@ -108,6 +125,6 @@ exports.deleteAppointment = async (req, res, next) => {
         await Appointment.deleteAppointmentFromDB(req.params.email)
         res.redirect('/all-appointments')
     } catch (error) {
-        res.json(error)
+        res.status(404).render('404')
     }
 };

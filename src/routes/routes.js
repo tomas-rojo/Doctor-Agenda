@@ -18,11 +18,9 @@ router
     .post("/add-patient", addNewPatient)
     .get("/patients", getAllPatients)
     .get("/delete-patient/:id", deletePatient)
-    .get("/all-appointments", getAllAppointments)
+    .get("/appointments", getAllAppointments)
     .get("/add-appointment/:id", getAppointment)
     .get("/delete-appointment/:email", deleteAppointment)
-    .patch("/")
-    .delete("/")
     .post("/add-appointment", addAppointment)
 
 module.exports = router
