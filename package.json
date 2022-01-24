@@ -17,7 +17,8 @@
     "express": "^4.17.1",
     "pg": "^8.7.1",
     "redis": "^3.1.2",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "dotenv": "^10.0.0"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",
