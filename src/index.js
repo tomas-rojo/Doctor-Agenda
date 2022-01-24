@@ -3,7 +3,9 @@ const cors = require('cors');
 const routes = require('./routes/routes');
 const invalidRoute = require('./routes/invalidRoutes')
 const { connection } = require('./db/connection')
+const { PORT } = require('./config/globals')
 const app = express();
+const compression = require('compression')
 
 //SETTINGS
 app.set('views', (__dirname + '/views'))
@@ -14,16 +16,14 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
-
-
-const port = 3000;
+app.use(compression())
 
 app.use('/', routes)
 app.use('*', invalidRoute)
 
 connection().then((message) => {
     console.log(message)
-    app.listen(port, () => {
-        console.log(`Server running on http://localhost:${port}`);
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
     })
 })
